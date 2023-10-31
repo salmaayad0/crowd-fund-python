@@ -9,6 +9,7 @@ class TestDemo(unittest.TestCase):
         
     def testLogin(self):
         self.assertEqual(main.login("test", "123456"),"test@gmail.com","faild")
+        self.assertEqual(main.login("test@gmail.com", "123"),"123456","faild")
 
 
 
