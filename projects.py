@@ -65,6 +65,7 @@ def projTiming():
     endProj = end.strftime(format)
     return startProj, endProj
 
+
 def createProj(email):
     newProj = projectValidate()
     start, end = projTiming()
@@ -102,10 +103,11 @@ def createProj(email):
                 newProj = ','.join(newProj) + '\n'
                 file.write(newProj)
                 file.close()
-                print('new project added')
+                print('=== new project added ===')
                 viewProj(email)
 
-def viewProj(email):
+
+def checkProj(email):
     print(f'your email {email} has projects: ')
     projects, viewList = [], []
     try:
@@ -121,23 +123,64 @@ def viewProj(email):
             project = project.split(',')
             if project[4] == email:
                 viewList.append(project)
+    return viewList
     
-        else:
-            if len(viewList) > 0:
-                for l in viewList:
-                    print(l)
-                print('back to menu')
-                projectMenu(email)
-            else:
-                print('this user has no projects to view\nadd new')
-                createProj(email)
+
+def viewProj(email):
+    viewList = checkProj(email)
+    
+    if len(viewList) > 0:
+        for l in viewList:
+            print(l)
+        print('back to menu')
+        print(30*'=')
+        projectMenu(email)
+    else:
+        print('this user has no projects to view\nadd new')
+        print(30*'=')
+        createProj(email)
                 
+
+def deleteProject(email):
+    viewList = checkProj(email)
+    
+    if len(viewList) > 0:
+        for l in viewList:
+            print(l)
+        else:
+            delId = input('enter the project ID you want to delete \n')
+            delProj = list(filter(lambda l: (l[0] == delId), viewList))
+            if len(delProj) > 0:
+                try:
+                    file = open('projects.txt','w+')
+                except:
+                    print('can\'t open projects file')
+                else:
+                    data = file.readlines()
+                    for d in data:
+                        if d == delProj[0]:
+                            continue
+                        else:
+                            file.writelines(d)
+                    else:
+                        file.close()
+                        print(f'Project id {delId} deleted')
+                        print(30*'=')
+                        projectMenu(email)
+            else:
+                print('wrong project id')
+                print(30*'=')
+                projectMenu(email)
+
+    else:
+        print('this user has no projects to view\nadd new')
+        createProj(email)
         
     
 
 
 def projectMenu(email):
-    print("Please, Make Your Choice\n1-Create Project\n2-View Project\n3-Back\n4-Exit")
+    print("Please, Make Your Choice\n1-Create Project\n2-View Project\n3-Delete Project\n4-Exit")
     choice = input('Enter your choice:- ')
     if choice == '1':
         print('create new project')
@@ -146,9 +189,14 @@ def projectMenu(email):
     elif choice == '2':
         print('view your projects')
         viewProj(email)
-        
+    
     elif choice == '3':
+        print('your projects are ')
+        deleteProject(email)
+        
+    elif choice == '4':
         print('exit... ')
+        print(30*'=')
         exit()
         
     else: 

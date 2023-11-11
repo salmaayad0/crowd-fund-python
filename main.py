@@ -77,7 +77,8 @@ def userExisting(newUser):
                 newUser = ','.join(newUser) + '\n'
                 file.write(newUser)
                 file.close()
-                print('user added')
+                print('==== user added ====')
+                print(30*'=')
                 projectMenu(email)
                 
                 
@@ -114,8 +115,9 @@ def login():
         for user in users:
             userDetails = user.split(',')
             if userDetails[2] == email and userDetails[3] == password:
-                print('loged in successfully')
+                print('==== loged in successfully ====')
                 file.close()
+                print(30*'=')
                 projectMenu(email)
                 break
         else:
@@ -136,12 +138,15 @@ def main():
     
     elif choice == '3':
         print('exit... ')
+        print(30*'=')
         exit()
         
     else: 
         print('entered invalid choice')
+        print(30*'=')
         main()
 
 # start project
-print('Crowd fund project\n') 
+print(30*'=')
+print('Crowd fund project\n')
 main()
