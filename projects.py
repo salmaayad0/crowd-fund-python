@@ -123,7 +123,9 @@ def checkProj(email):
             project = project.split(',')
             if project[4] == email:
                 viewList.append(project)
-    return viewList
+        else:
+            return viewList
+    
     
 
 def viewProj(email):
@@ -139,7 +141,32 @@ def viewProj(email):
         print('this user has no projects to view\nadd new')
         print(30*'=')
         createProj(email)
-                
+
+def getOldData(deleted):
+    newProjFile = []
+    try:
+        file = open('projects.txt')
+    except:
+        print('can\'t open projects file')
+    else:
+        data = file.readlines()
+        for d in data:
+            if d != deleted:
+                newProjFile.append(d)
+        else:
+            file.close()
+            return newProjFile
+            
+def writeNewFile(newProjFile):
+    try:
+        file = open('projects.txt', 'w')
+    except:
+        print('there is an error opening projects file')
+    else:
+        for proj in newProjFile:
+            file.writelines(proj)
+    finally:
+        file.close()
 
 def deleteProject(email):
     viewList = checkProj(email)
@@ -151,24 +178,18 @@ def deleteProject(email):
             delId = input('enter the project ID you want to delete \n')
             delProj = list(filter(lambda l: (l[0] == delId), viewList))
             if len(delProj) > 0:
-                try:
-                    file = open('projects.txt','w+')
-                except:
-                    print('can\'t open projects file')
-                else:
-                    data = file.readlines()
-                    for d in data:
-                        if d == delProj[0]:
-                            continue
-                        else:
-                            file.writelines(d)
-                    else:
-                        file.close()
-                        print(f'Project id {delId} deleted')
-                        print(30*'=')
-                        projectMenu(email)
+                for l in viewList:
+                    if l[0] == delId:
+                        deleted = ','.join(l) + '\n'
+                        
+                newProjFile = getOldData(deleted)
+                writeNewFile(newProjFile)
+                
+                print(f'Project id {delId} deleted')
+                print(30*'=')
+                projectMenu(email)
             else:
-                print('wrong project id')
+                print('wrong project id\nback to menu')
                 print(30*'=')
                 projectMenu(email)
 
